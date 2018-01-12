@@ -2,13 +2,13 @@
 #define	__MCGSTOUCH_H
 
 #include "stm32f10x.h"
-#include "usart1.h"
+#include "uart5.h"
 
 /**************串口初始化宏定义**************/
-#define		USATTBUF					Usart1Buf
-#define		USARTCONFIG				usart1_config
-#define		GETBUF						Get_Buf_Usart1_PT
-#define		SENDMESSAGE				usart1_send
+#define		USATTBUF					Uart5Buf
+#define		USARTCONFIG				uart5_config
+#define		GETBUF						get_buf_uart5_pt
+#define		SENDMESSAGE				uart5_send
 /********************************************/
 
 /******************Way类型******************/
