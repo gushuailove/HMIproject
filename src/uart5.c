@@ -17,16 +17,16 @@ static volatile TimerDelay* uart5_timer;
 /*
 UART5 ÷–∂œ≈‰÷√
  */
-static void NVIC_uart5_Configuration(void)
+void NVIC_uart5_Configuration(void)
 {
 	NVIC_InitTypeDef NVIC_InitStructure; 
 	/* Configure the NVIC Preemption Priority Bits */  
 	
-//	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);        //÷–∂œ≈‰÷√	
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);        //÷–∂œ≈‰÷√	
 	
 	NVIC_InitStructure.NVIC_IRQChannel = UART5_IRQn;	 
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	USART_ITConfig(UART5, USART_IT_RXNE, ENABLE);
@@ -42,8 +42,7 @@ void uart5_config(void)
 	USART_InitTypeDef USART_InitStructure;
 	
  	/* config UART5 clock */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
- 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOC |RCC_APB2Periph_GPIOD, ENABLE);
  	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5, ENABLE);
  	
  	/* UART5 GPIO config */

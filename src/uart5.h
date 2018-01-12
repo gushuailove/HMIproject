@@ -5,7 +5,7 @@
 #include "timer.h"
 
 #define		UART5_RX_BUF				1500    //接收数据缓存长度
-#define		UART5_TIMER         2					//串口数据接收延时，在30ms内没有新的数据则认为单次数据接收完成
+#define		UART5_TIMER         3					//串口数据接收延时，在30ms内没有新的数据则认为单次数据接收完成
 
 typedef  unsigned char  UART5_Buf_Type;
 typedef struct
@@ -19,5 +19,6 @@ Uart5Buf*  get_buf_uart5_pt(void); //输出指向缓存的指针
 void uart5_config(void);  //UART5 GPIO 配置,工作模式配置
 void uart5_send(uint8_t*  send_data , uint16_t  send_size);//UART5 发送数据函数
 uint8_t Get_Buf_Uart5_PT(Uart5Buf*  temp_data);
+void NVIC_uart5_Configuration(void);
 #endif /* __UART5_H */
 

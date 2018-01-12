@@ -7,7 +7,7 @@
 /**************串口初始化宏定义**************/
 #define		USATTBUF					Uart5Buf
 #define		USARTCONFIG				uart5_config
-#define		GETBUF						get_buf_uart5_pt
+#define		GETBUF						Get_Buf_Uart5_PT
 #define		SENDMESSAGE				uart5_send
 /********************************************/
 
