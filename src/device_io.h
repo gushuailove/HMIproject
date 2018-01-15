@@ -19,7 +19,7 @@ typedef union
 	{
 		unsigned start:1;
 		unsigned stop:1;
-		unsigned restart:1;
+		unsigned continue:1;
 		unsigned cancel:1;
 		unsigned water:1;
 	}bit;
