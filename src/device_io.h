@@ -27,7 +27,7 @@ typedef union
 
 DeviceData device_data[CHANNEL_MAX];
 
-void device_loop(DeviceStateType device_statu);
+void device_loop(DeviceStateType device_state, uint8_t channel_id);
 
 #endif
 
