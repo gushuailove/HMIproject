@@ -1,29 +1,29 @@
 /**********************************************************************************
- * ÎÄ ¼þ Ãû£ºMCGSTouch.c
- * Ãè    Êö£º
- * Ê±    ¼ä£º2017-12-22
- * ×÷    Õß£ºÀîÑå»Ô
+ * æ–‡ ä»¶ åï¼šMCGSTouch.c
+ * æ    è¿°ï¼š
+ * æ—¶    é—´ï¼š2017-12-22
+ * ä½œ    è€…ï¼šæŽå½¦è¾‰
 **********************************************************************************/
 #include "MCGSTouch.h"
 
-/**************Ïà¹Øº¯ÊýµÄÖ¸Õë**************/
-void (*uart_config)(void);//´®¿Ú³õÊ¼»¯
-void (*send_message)(uint8_t*  send_data , uint16_t  send_size);//´®¿Ú·¢ËÍº¯Êý
-uint8_t (*get_buf_pt)(USATTBUF*  temp_data);//´®¿Ú½ÓÊÕ
+/**************ç›¸å…³å‡½æ•°çš„æŒ‡é’ˆ**************/
+void (*uart_config)(void);//ä¸²å£åˆå§‹åŒ–
+void (*send_message)(uint8_t*  send_data , uint16_t  send_size);//ä¸²å£å‘é€å‡½æ•°
+uint8_t (*get_buf_pt)(USATTBUF*  temp_data);//ä¸²å£æŽ¥æ”¶
 /********************************************/
 
 /*************************************************************
-|1|ÃèÊö £ºMCGSTouch´®¿Ú³õÊ¼»¯      
-|2|µ÷ÓÃ £ºÎÞ
-|3|ÊäÈë £ºÎÞ                 
-|4|·µ»Ø : ÎÞ
+|1|æè¿° ï¼šMCGSTouchä¸²å£åˆå§‹åŒ–      
+|2|è°ƒç”¨ ï¼šæ— 
+|3|è¾“å…¥ ï¼šæ—                  
+|4|è¿”å›ž : æ— 
 *************************************************************/
 void MCGSTouch_Initial(void)
 {
-	uart_config = USARTCONFIG;					//´®¿ÚÅäÖÃº¯Êý¸³Öµ£¬±¾´ÎÊ¹ÓÃ´®¿Ú1
-	get_buf_pt = GETBUF;								//»ñÈ¡´®¿Ú»º´æº¯Êý¸³Öµ£¬±¾´ÎÊ¹ÓÃ´®¿Ú1
-	send_message = SENDMESSAGE;					//Í¨¹ý´®¿ÚÏò´òÓ¡»ú·¢ËÍÊý¾Ý£¬±¾´ÎÊ¹ÓÃ´®¿Ú1	
-	uart_config(); 											//ÅäÖÃ´®¿Ú£¬±¾´ÎÊ¹ÓÃ´®¿Ú1	
+	uart_config = USARTCONFIG;					//ä¸²å£é…ç½®å‡½æ•°èµ‹å€¼ï¼Œæœ¬æ¬¡ä½¿ç”¨ä¸²å£1
+	get_buf_pt = GETBUF;								//èŽ·å–ä¸²å£ç¼“å­˜å‡½æ•°èµ‹å€¼ï¼Œæœ¬æ¬¡ä½¿ç”¨ä¸²å£1
+	send_message = SENDMESSAGE;					//é€šè¿‡ä¸²å£å‘æ‰“å°æœºå‘é€æ•°æ®ï¼Œæœ¬æ¬¡ä½¿ç”¨ä¸²å£1	
+	uart_config(); 											//é…ç½®ä¸²å£ï¼Œæœ¬æ¬¡ä½¿ç”¨ä¸²å£1	
 }
 uint8_t CRCHi[] = 
 {
@@ -104,21 +104,21 @@ void DisplayInterface(uint8_t way,uint8_t type,uint8_t time)
 {
 	uint8_t data[50] = 
 	{
-	0x01,0x10,//Í·
-	0x00,0x00,//ÆðÊ¼µØÖ·
-	0x00,0x0b,//µØÖ·³¤¶È
-	0x16,			//Êý¾Ý³¤¶È
-	0x00,0x00,//Êý¾Ý1 7 8
-	0x00,0x00,//Êý¾Ý2
-	0x00,0x00,//Êý¾Ý3
-	0x00,0x00,//Êý¾Ý4
-	0x00,0x00,//Êý¾Ý5
-	0x00,0x00,//Êý¾Ý6
-	0x00,0x00,//Êý¾Ý7
-	0x00,0x00,//Êý¾Ý8
-	0x00,0x00,//Êý¾Ý9
-	0x00,0x00,//Êý¾Ý10
-	0x00,0x00,//Êý¾Ý11
+	0x01,0x10,//å¤´
+	0x00,0x00,//èµ·å§‹åœ°å€
+	0x00,0x0b,//åœ°å€é•¿åº¦
+	0x16,			//æ•°æ®é•¿åº¦
+	0x00,0x00,//æ•°æ®1 7 8
+	0x00,0x00,//æ•°æ®2
+	0x00,0x00,//æ•°æ®3
+	0x00,0x00,//æ•°æ®4
+	0x00,0x00,//æ•°æ®5
+	0x00,0x00,//æ•°æ®6
+	0x00,0x00,//æ•°æ®7
+	0x00,0x00,//æ•°æ®8
+	0x00,0x00,//æ•°æ®9
+	0x00,0x00,//æ•°æ®10
+	0x00,0x00,//æ•°æ®11
 	0x00,0x00	//CRC
 	};
 	
@@ -159,15 +159,15 @@ void DisplayContinuedPause(uint8_t way,uint8_t type)
 {
 	uint8_t data[50] = 
 	{
-	0x01,0x10,//Í·
-	0x00,0x00,//ÆðÊ¼µØÖ·
-	0x00,0x05,//µØÖ·³¤¶È
-	0x0a,			//Êý¾Ý³¤¶È
-	0x00,0x00,//Êý¾Ý1 7 8
-	0x00,0x00,//Êý¾Ý2
-	0x00,0x00,//Êý¾Ý3
-	0x00,0x00,//Êý¾Ý4
-	0x00,0x00,//Êý¾Ý5	
+	0x01,0x10,//å¤´
+	0x00,0x00,//èµ·å§‹åœ°å€
+	0x00,0x05,//åœ°å€é•¿åº¦
+	0x0a,			//æ•°æ®é•¿åº¦
+	0x00,0x00,//æ•°æ®1 7 8
+	0x00,0x00,//æ•°æ®2
+	0x00,0x00,//æ•°æ®3
+	0x00,0x00,//æ•°æ®4
+	0x00,0x00,//æ•°æ®5	
 	0x00,0x00	//CRC
 	};
 	
@@ -204,11 +204,11 @@ void UpdateTime(uint8_t way,uint8_t time)
 {
 	uint8_t data[50] = 
 	{
-	0x01,0x10,//Í·
-	0x00,0x00,//ÆðÊ¼µØÖ·
-	0x00,0x01,//µØÖ·³¤¶È
-	0x02,			//Êý¾Ý³¤¶È
-	0x00,0x00,//Êý¾Ý1 7 8
+	0x01,0x10,//å¤´
+	0x00,0x00,//èµ·å§‹åœ°å€
+	0x00,0x01,//åœ°å€é•¿åº¦
+	0x02,			//æ•°æ®é•¿åº¦
+	0x00,0x00,//æ•°æ®1 7 8
 	0x00,0x00	//CRC
 	};
 	
@@ -233,15 +233,15 @@ void EmptyKey(uint8_t way)
 {
 	uint8_t data[50] = 
 	{
-	0x01,0x10,//Í·
-	0x00,0x00,//ÆðÊ¼µØÖ·
-	0x00,0x05,//µØÖ·³¤¶È
-	0x0a,			//Êý¾Ý³¤¶È
-	0x00,0x00,//Êý¾Ý1 7 8
-	0x00,0x00,//Êý¾Ý2
-	0x00,0x00,//Êý¾Ý3
-	0x00,0x00,//Êý¾Ý4
-	0x00,0x00,//Êý¾Ý5	
+	0x01,0x10,//å¤´
+	0x00,0x00,//èµ·å§‹åœ°å€
+	0x00,0x05,//åœ°å€é•¿åº¦
+	0x0a,			//æ•°æ®é•¿åº¦
+	0x00,0x00,//æ•°æ®1 7 8
+	0x00,0x00,//æ•°æ®2
+	0x00,0x00,//æ•°æ®3
+	0x00,0x00,//æ•°æ®4
+	0x00,0x00,//æ•°æ®5	
 	0x00,0x00	//CRC
 	};
 	
@@ -263,12 +263,12 @@ void SetModeTime(uint8_t way,uint8_t type,uint8_t time)
 {
 	uint8_t data[50] = 
 	{
-	0x01,0x10,//Í·
-	0x00,0x00,//ÆðÊ¼µØÖ·
-	0x00,0x02,//µØÖ·³¤¶È
-	0x04,			//Êý¾Ý³¤¶È
-	0x00,0x00,//Êý¾Ý1 7 8
-	0x00,0x00,//Êý¾Ý2	
+	0x01,0x10,//å¤´
+	0x00,0x00,//èµ·å§‹åœ°å€
+	0x00,0x02,//åœ°å€é•¿åº¦
+	0x04,			//æ•°æ®é•¿åº¦
+	0x00,0x00,//æ•°æ®1 7 8
+	0x00,0x00,//æ•°æ®2	
 	0x00,0x00	//CRC
 	};
 	
@@ -292,9 +292,9 @@ void ReadKey(uint8_t way)
 {
 	uint8_t data[50] = 
 	{
-	0x01,0x03,//Í·
-	0x00,0x00,//ÆðÊ¼µØÖ·
-	0x00,0x07,//µØÖ·³¤¶È	
+	0x01,0x03,//å¤´
+	0x00,0x00,//èµ·å§‹åœ°å€
+	0x00,0x07,//åœ°å€é•¿åº¦	
 	0x00,0x00	//CRC
 	};
 	
@@ -313,27 +313,27 @@ void ReadKey(uint8_t way)
 	send_message_handle(data,8);
 }
 /*************************************************************
-|1|ÃèÊö £ºMCGSTouch·¢ËÍº¯Êý   
-|2|µ÷ÓÃ £ºÎÞ
-|3|ÊäÈë £º
-way:Í¨µÀ
-	MCGSTouch.h -> WayÀàÐÍ 
-		WAY_1 £ºÍ¨µÀÒ»
-		WAY_2 £ºÍ¨µÀ¶þ
-type:¶¯×÷ÀàÐÍ
-	MCGSTouch.h -> TypeÀàÐÍ 
-		DISPLAY_INTERFACE_1	£ºÏÔÊ¾½çÃæÒ»
-		DISPLAY_INTERFACE_2	£ºÏÔÊ¾½çÃæ¶þ
-		DISPLAY_INTERFACE_3	£ºÏÔÊ¾½çÃæÈý
-		DISPLAY_CONTINUED		£ºÏÔÊ¾¼ÌÐø°´Å¥
-		DISPLAY_PAUSE				£ºÏÔÊ¾ÔÝÍ£°´Å¥		
-		UPDATE_TIME					£º¸üÐÂÊ£ÓàÊ±¼ä		
-		READ_KEY						£º¶ÁÈ¡°´¼ü×´Ì¬					
-		EMPTY_KEY						£ºÇå¿Õ°´¼ü×´Ì¬		
-		SET_MODE_TIME				£ºÉèÖÃ½çÃæÒ»ÖÐµÄÄ£Ê½ºÍÊ±¼ä	
-data1 : ´æ·Å¹¤×÷Ä£Ê½
-data2	£º´æ·ÅÊ£ÓàÊ±¼ä/¹¤×÷Ê±¼ä 
-|4|·µ»Ø : ÎÞ
+|1|æè¿° ï¼šMCGSTouchå‘é€å‡½æ•°   
+|2|è°ƒç”¨ ï¼šæ— 
+|3|è¾“å…¥ ï¼š
+way:é€šé“
+	MCGSTouch.h -> Wayç±»åž‹ 
+		WAY_1 ï¼šé€šé“ä¸€
+		WAY_2 ï¼šé€šé“äºŒ
+type:åŠ¨ä½œç±»åž‹
+	MCGSTouch.h -> Typeç±»åž‹ 
+		DISPLAY_INTERFACE_1	ï¼šæ˜¾ç¤ºç•Œé¢ä¸€
+		DISPLAY_INTERFACE_2	ï¼šæ˜¾ç¤ºç•Œé¢äºŒ
+		DISPLAY_INTERFACE_3	ï¼šæ˜¾ç¤ºç•Œé¢ä¸‰
+		DISPLAY_CONTINUED		ï¼šæ˜¾ç¤ºç»§ç»­æŒ‰é’®
+		DISPLAY_PAUSE				ï¼šæ˜¾ç¤ºæš‚åœæŒ‰é’®		
+		UPDATE_TIME					ï¼šæ›´æ–°å‰©ä½™æ—¶é—´		
+		READ_KEY						ï¼šè¯»å–æŒ‰é”®çŠ¶æ€					
+		EMPTY_KEY						ï¼šæ¸…ç©ºæŒ‰é”®çŠ¶æ€		
+		SET_MODE_TIME				ï¼šè®¾ç½®ç•Œé¢ä¸€ä¸­çš„æ¨¡å¼å’Œæ—¶é—´	
+data1 : å­˜æ”¾å·¥ä½œæ¨¡å¼
+data2	ï¼šå­˜æ”¾å‰©ä½™æ—¶é—´/å·¥ä½œæ—¶é—´ 
+|4|è¿”å›ž : æ— 
 *************************************************************/
 void MCGSTouch_Send(uint8_t way,uint8_t type,uint8_t data1,uint8_t data2)
 {	
@@ -365,24 +365,24 @@ void MCGSTouch_Send(uint8_t way,uint8_t type,uint8_t data1,uint8_t data2)
 	}
 }
 /*************************************************************
-|1|ÃèÊö £ºMCGSTouch½ÓÊÕº¯Êý 
-|2|µ÷ÓÃ £ºÎÞ
-|3|ÊäÈë £º
-type:¶¯×÷ÀàÐÍ
-	MCGSTouch.h -> TypeÀàÐÍ 
-		DISPLAY_INTERFACE_1	£ºÏÔÊ¾½çÃæÒ»
-		DISPLAY_INTERFACE_2	£ºÏÔÊ¾½çÃæ¶þ
-		DISPLAY_INTERFACE_3	£ºÏÔÊ¾½çÃæÈý
-		DISPLAY_CONTINUED		£ºÏÔÊ¾¼ÌÐø°´Å¥
-		DISPLAY_PAUSE				£ºÏÔÊ¾ÔÝÍ£°´Å¥		
-		UPDATE_TIME					£º¸üÐÂÊ£ÓàÊ±¼ä		
-		READ_KEY						£º¶ÁÈ¡°´¼ü×´Ì¬					
-		EMPTY_KEY						£ºÇå¿Õ°´¼ü×´Ì¬		
-		SET_MODE_TIME				£ºÉèÖÃ½çÃæÒ»ÖÐµÄÄ£Ê½ºÍÊ±¼ä	
-key  : ÄÄ¸ö°´¼ü±»°´ÏÂ£¨Ö»ÓÐÑ¯ÎÊ°´¼üÊ±ÓÐÓÃ£©
-mode £º¹¤×÷Ä£Ê½ 
-time £º¹¤×÷Ê±¼ä 
-|4|·µ»Ø : 2 £ºÃ»ÓÐ°´¼ü±»°´ÏÂ 3£ºÓÐ°´¼ü±»°´ÏÂ 1£ºÆäËü»Ø¸´ 0£ºÎÞ»Ø¸´
+|1|æè¿° ï¼šMCGSTouchæŽ¥æ”¶å‡½æ•° 
+|2|è°ƒç”¨ ï¼šæ— 
+|3|è¾“å…¥ ï¼š
+type:åŠ¨ä½œç±»åž‹
+	MCGSTouch.h -> Typeç±»åž‹ 
+		DISPLAY_INTERFACE_1	ï¼šæ˜¾ç¤ºç•Œé¢ä¸€
+		DISPLAY_INTERFACE_2	ï¼šæ˜¾ç¤ºç•Œé¢äºŒ
+		DISPLAY_INTERFACE_3	ï¼šæ˜¾ç¤ºç•Œé¢ä¸‰
+		DISPLAY_CONTINUED		ï¼šæ˜¾ç¤ºç»§ç»­æŒ‰é’®
+		DISPLAY_PAUSE				ï¼šæ˜¾ç¤ºæš‚åœæŒ‰é’®		
+		UPDATE_TIME					ï¼šæ›´æ–°å‰©ä½™æ—¶é—´		
+		READ_KEY						ï¼šè¯»å–æŒ‰é”®çŠ¶æ€					
+		EMPTY_KEY						ï¼šæ¸…ç©ºæŒ‰é”®çŠ¶æ€		
+		SET_MODE_TIME				ï¼šè®¾ç½®ç•Œé¢ä¸€ä¸­çš„æ¨¡å¼å’Œæ—¶é—´	
+key  : å“ªä¸ªæŒ‰é”®è¢«æŒ‰ä¸‹ï¼ˆåªæœ‰è¯¢é—®æŒ‰é”®æ—¶æœ‰ç”¨ï¼‰
+mode ï¼šå·¥ä½œæ¨¡å¼ 
+time ï¼šå·¥ä½œæ—¶é—´ 
+|4|è¿”å›ž : 2 ï¼šæ²¡æœ‰æŒ‰é”®è¢«æŒ‰ä¸‹ 3ï¼šæœ‰æŒ‰é”®è¢«æŒ‰ä¸‹ 1ï¼šå…¶å®ƒå›žå¤ 0ï¼šæ— å›žå¤
 *************************************************************/
 uint8_t MCGSTouch_Receive(uint8_t type,uint8_t *key,uint8_t *mode,uint8_t *time)
 {
@@ -413,11 +413,11 @@ uint8_t MCGSTouch_Receive(uint8_t type,uint8_t *key,uint8_t *mode,uint8_t *time)
 				{
 					for(i=4; i<=12; i=i+2)
 					{
-						if(bufRfid.array[i])//¼ÌÐø//ÔÝÍ£//È¡Ïû//È·¶¨//¿ªÊ¼
+						if(bufRfid.array[i])//ç»§ç»­//æš‚åœ//å–æ¶ˆ//ç¡®å®š//å¼€å§‹
 						{
 							*key = i;
-							*mode = bufRfid.array[14];//Ä£Ê½
-							*time = bufRfid.array[16];//Ê±¼ä
+							*mode = bufRfid.array[14];//æ¨¡å¼
+							*time = bufRfid.array[16];//æ—¶é—´
 							return 3;
 						}
 					}	
@@ -430,7 +430,6 @@ uint8_t MCGSTouch_Receive(uint8_t type,uint8_t *key,uint8_t *mode,uint8_t *time)
 	}
 	return 0;
 }
-/******************* (C) COPYRIGHT 2012 WildFire Team *****END OF FILE************/
 
 
 
