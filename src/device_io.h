@@ -4,6 +4,10 @@
 
 #define CHANNEL_MAX  2
 
+#define WORK_MODE_ALL 1//remaining time count uint is 1s
+#define WORK_MODE_HALF 2//remaining time count uint is 1s
+
+
 typedef enum {
 	DEVICE_STATE_POWERON = 0,//ref overlay sheet	
 	DEVICE_STATE_WAITING,
@@ -25,8 +29,10 @@ typedef union
 	}bit;
 }DeviceData;
 
-DeviceData device_data[CHANNEL_MAX];
+extern DeviceData device_data[CHANNEL_MAX];
 
+void read_work_value(uint8_t chn, uint8_t* mode, uint8_t* time);
+void write_work_value(uint8_t chn, uint8_t mode, uint8_t time);//write touchscreen data
 void device_loop(DeviceStateType device_state, uint8_t channel_id);
 
 #endif
