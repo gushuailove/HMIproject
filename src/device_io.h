@@ -1,6 +1,6 @@
 #ifndef DEVICE_IO_H__
 #define DEVICE_IO_H__
-
+#include  "stdint.h"
 
 #define CHANNEL_MAX  2
 
@@ -23,7 +23,7 @@ typedef union
 	{
 		unsigned start:1;
 		unsigned stop:1;
-		unsigned continue:1;
+		unsigned continued:1;
 		unsigned cancel:1;
 		unsigned water:1;
 	}bit;

@@ -1,7 +1,7 @@
 #ifndef SYS_HANDLE_H__
 #define SYS_HANDLE_H__
-
-
+#include "timer.h"
+#include "device_io.h"
 #define SYS_OV_TIME 500//system overtimer is 5s
 #define REMAININ1_TIME 6000//remaining time count uint is 1min
 
@@ -20,8 +20,8 @@ typedef struct
 	uint8_t work_mode;
 }ChannelMessage;
 
-extern const SysHandle* sys_handle_fuc[];
-
+extern SysHandle* sys_handle_fuc[];
+extern ChannelMessage channel_message[CHANNEL_MAX];
 
 void sys_handle_initial(void);
 

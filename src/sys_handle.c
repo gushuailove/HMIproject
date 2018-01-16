@@ -1,6 +1,6 @@
 #include "sys_handle.h"
 #include "device_io.h"
-
+#include "MCGSTouch.h"
 
 
 uint32_t sys_poweron_handle(uint8_t channel_id);
@@ -13,12 +13,12 @@ volatile TimerDelay* remaining_timers[CHANNEL_MAX];
 
 ChannelMessage channel_message[CHANNEL_MAX];
 
-const SysHandle* sys_handle_fuc[] = {
+SysHandle* sys_handle_fuc[] = {
 	sys_poweron_handle,
 	sys_waiting_handle,
 	sys_start_handle,
 	sys_stop_handle,
-}
+};
 
 
 
@@ -27,10 +27,10 @@ void sys_handle_initial(void)
 {
 	uint8_t i;
 
-	for(i = 0, i < CHANNEL_MAX, i++){
+	for(i = 0; i < CHANNEL_MAX; i++){
 		sys_ov_timers[i] = Delay_Initial(SYS_OV_TIME);
 		remaining_timers[i] = Delay_Initial(REMAININ1_TIME);
-		memset(&channel_message[i], 0, sizeof(channel_message[i]));
+	//	memset(&channel_message[i], 0, sizeof(channel_message[i]));
 	}
 }
 
@@ -56,7 +56,7 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 				channel_message[channel_id].sys_state ++;
 				*state = 0;
 			}
-			if(Delay_Ok(ov_timer){//error overtime
+			if(Delay_Ok(ov_timer)){//error overtime
 				*state = 0;
 			}
 			else{//wait touchscreen answer
@@ -125,7 +125,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 			if(MCGSTouch_Receive(SET_MODE_TIME,&key,&way,&time) == 1){
 				(*state) ++;				
 			}
-			else if(Delay_Ok(ov_timer){
+			else if(Delay_Ok(ov_timer)){
 				*state = 0;
 			}
 			else{
@@ -142,7 +142,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 			if(MCGSTouch_Receive(EMPTY_KEY,&key,&way,&time) == 1){
 				(*state) ++;
 			}
-			else if(Delay_Ok(ov_timer){
+			else if(Delay_Ok(ov_timer)){
 				*state = 0;
 			}
 			else{
@@ -182,7 +182,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_2,&key,&way,&time) == 1){
 				(*state) ++;				
 			}
-			else if(Delay_Ok(ov_timer){
+			else if(Delay_Ok(ov_timer)){
 				*state = 0;
 			}
 			else{
@@ -198,7 +198,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			if(MCGSTouch_Receive(UPDATE_TIME,&key,&way,&time) == 1){					
 				(*state) ++;				
 			}
-			else if(Delay_Ok(ov_timer){
+			else if(Delay_Ok(ov_timer)){
 				*state = 0;
 			}
 			else{
@@ -241,7 +241,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 				channel_message[channel_id].sys_state ++;
 			}
 			else if(device_data[channel_id - 1].bit.water && 
-				(channel_message[channel_id].work_mode == WORK_MODE_ALL){//no water
+				(channel_message[channel_id].work_mode == WORK_MODE_ALL)){//no water
 				*state = START_STATE_NO_WATER;
 				channel_message[channel_id].sys_state ++;
 			}
@@ -263,10 +263,10 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			MCGSTouch_Send(channel_id, DISPLAY_INTERFACE_3, 0, 0);
 			return N_S_C_R;
 		case START_STATE_NO_WATER + 1:
-			if(MMCGSTouch_Receive(DISPLAY_INTERFACE_3,&key,&way,&time) == 1){
-				*state ++;				
+			if(MCGSTouch_Receive(DISPLAY_INTERFACE_3,&key,&way,&time) == 1){
+				(*state) ++;				
 			}
-			else if(Delay_Ok(ov_timer){
+			else if(Delay_Ok(ov_timer)){
 				*state = 0;
 			}
 			else{
@@ -326,7 +326,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_2,&key,&way,&time) == 1){
 				(*state) ++;				
 			}
-			else if(Delay_Ok(ov_timer){
+			else if(Delay_Ok(ov_timer)){
 				*state = 0;
 			}
 			else{
@@ -364,7 +364,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 			}
 			break;
 		case 4://ask device IO
-			if(device_data[channel_id - 1].bit.continue){
+			if(device_data[channel_id - 1].bit.continued){
 				*state = 0;
 				channel_message[channel_id].sys_state --;
 			}
