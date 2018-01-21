@@ -31,6 +31,7 @@ typedef union
 
 extern DeviceData device_data[CHANNEL_MAX];
 
+void device_initial(void);
 void read_work_value(uint8_t chn, uint8_t* mode, uint8_t* time);
 void write_work_value(uint8_t chn, uint8_t mode, uint8_t time);//write touchscreen data
 void device_loop(DeviceStateType device_state, uint8_t channel_id);

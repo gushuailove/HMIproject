@@ -43,6 +43,9 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id - 1];
 	uint8_t* state = &(channel_message[channel_id - 1].state);
 	
+	if(channel_id>=2){
+		while(1);
+	}
 	switch (*state){
 		case 0://get default value
 			Close_Delay(ov_timer);
