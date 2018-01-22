@@ -41,8 +41,8 @@ void read_work_value(uint8_t chn, uint8_t* mode, uint8_t* time)
 {
 	if(chn >= CHANNEL_MAX)//error
 		return;
-	*mode = work_mode[chn - 1];
-	*time = work_time[chn - 1];
+	*mode = work_mode[chn];
+	*time = work_time[chn];
 }
 
 
@@ -50,8 +50,8 @@ void write_work_value(uint8_t chn, uint8_t mode, uint8_t time)//write touchscree
 {
 	if(chn >= CHANNEL_MAX)//error
 		return;
-	work_mode[chn - 1] = mode;
-	work_time[chn - 1] = time;
+	work_mode[chn] = mode;
+	work_time[chn] = time;
 }
 
 
@@ -145,6 +145,26 @@ void device_loop(DeviceStateType device_state, uint8_t channel_id)
 	}
 }
 
+//             pump   o3    atomizer   footkey   
+//channel 1    PC9    PB15  PC7        PA5
+//channel 2    PA8    PC6   PC8        PC10
+typedef struct IODEVICE
+{
+	uint8_t port,
+	uint8_t pon,
+}IO_DEVICE;
+const IO_DEVICE array_io[CHANNEL_MAX][SWITCH_MAX] = {{{GPIOC, GPIO_Pin_9},{GPIOB, GPIO_Pin_15},{GPIOC, GPIO_Pin_7}},
+							{{GPIOA, GPIO_Pin_8},{GPIOC, GPIO_Pin_6},{GPIOC, GPIO_Pin_8}}};
+
+void set_device_switch(SwitchIO io, uint8_t channel_id)
+{
+	GPIO_SetBits(array_io[channel_id][io].port, array_io[channel_id][io].pin);
+}
+
+void Reset_device_switch(SwitchIO io, uint8_t channel_id)
+{
+	GPIO_ResetBits(array_io[channel_id][io].port, array_io[channel_id][io].pin);
+}
 
 
 

@@ -40,8 +40,8 @@ return N_S_C_R--not switch channel S_C_R--switch channel
 uint32_t sys_poweron_handle(uint8_t channel_id)
 {
 	uint8_t work_mode, work_time, key, way, time;
-	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id - 1];
-	uint8_t* state = &(channel_message[channel_id - 1].state);
+	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id];
+	uint8_t* state = &(channel_message[channel_id].state);
 	
 	if(channel_id>=2){
 		while(1);
@@ -51,7 +51,7 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
 			read_work_value(channel_id, &work_mode, &work_time);
-			MCGSTouch_Send(channel_id, DISPLAY_INTERFACE_1, work_mode, work_time);
+			MCGSTouch_Send(channel_id+1, DISPLAY_INTERFACE_1, work_mode, work_time);
 			(*state) ++;
 			return N_S_C_R;
 		case 1://judge achieve success
@@ -79,14 +79,14 @@ return N_S_C_R--not switch channel S_C_R--switch channel
 uint32_t sys_waiting_handle(uint8_t channel_id)
 {
 	uint8_t key_state, work_time, key, way, time;
-	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id - 1];
-	uint8_t* state = &(channel_message[channel_id - 1].state);
+	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id];
+	uint8_t* state = &(channel_message[channel_id].state);
 
 	switch (*state){
 		case 0://send command to check key
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(channel_id, READ_KEY, 0, 1);
+			MCGSTouch_Send(channel_id+1, READ_KEY, 0, 1);
 			(*state) ++;
 			return N_S_C_R;
 		case 1://get touch screen result
@@ -111,7 +111,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 			}
 			break;
 		case 2://judge foot key
-			if(device_data[channel_id - 1].bit.start){
+			if(device_data[channel_id].bit.start){
 				*state = 3;
 			}
 			else{
@@ -121,7 +121,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 		case 3://set interface 1 mode and time
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(WAY_1,SET_MODE_TIME,0,0);
+			MCGSTouch_Send(channel_id+1,SET_MODE_TIME,0,0);
 			(*state) ++;
 			return N_S_C_R;
 		case 4://judje reply
@@ -138,7 +138,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 		case 5://clear press key
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(WAY_1,EMPTY_KEY,0,1);
+			MCGSTouch_Send(channel_id+1,EMPTY_KEY,0,1);
 			(*state) ++;
 			break;
 		case 6:
@@ -170,15 +170,15 @@ return N_S_C_R--not switch channel S_C_R--switch channel
 uint32_t sys_start_handle(uint8_t channel_id)
 {
 	uint8_t key_state, work_time, key, way, time;
-	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id - 1];
-	volatile TimerDelay* rm_timer = remaining_timers[channel_id - 1];
-	uint8_t* state = &(channel_message[channel_id - 1].state);
+	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id];
+	volatile TimerDelay* rm_timer = remaining_timers[channel_id];
+	uint8_t* state = &(channel_message[channel_id].state);
 
 	switch (*state){
 		case 0://switch interface to 2
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(WAY_1,DISPLAY_INTERFACE_2,1,1); 
+			MCGSTouch_Send(channel_id+1,DISPLAY_INTERFACE_2,1,1); 
 			(*state) ++;
 			return N_S_C_R;
 		case 1://get touch screen result
@@ -195,7 +195,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 		case 2://update remaining time
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
-			MCGSTouch_Send(channel_id,UPDATE_TIME,1,channel_message[channel_id].remaining_time);// mode update??
+			MCGSTouch_Send(channel_id+1,UPDATE_TIME,1,channel_message[channel_id].remaining_time);// mode update??
 			return N_S_C_R;
 		case 3://judge reply
 			if(MCGSTouch_Receive(UPDATE_TIME,&key,&way,&time) == 1){					
@@ -211,7 +211,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 		case 4://ask touchscreen key
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
-			MCGSTouch_Send(channel_id,READ_KEY,0,1);
+			MCGSTouch_Send(channel_id+1,READ_KEY,0,1);
 			return N_S_C_R;
 		case 5://judge reply
 			key_state = MCGSTouch_Receive(READ_KEY,&key,&way,&time);
@@ -239,11 +239,11 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			}
 			break;
 		case 6://ask device IO
-			if(device_data[channel_id - 1].bit.stop){
+			if(device_data[channel_id].bit.stop){
 				*state = 0;
 				channel_message[channel_id].sys_state ++;
 			}
-			else if(device_data[channel_id - 1].bit.water && 
+			else if(device_data[channel_id].bit.water && 
 				(channel_message[channel_id].work_mode == WORK_MODE_ALL)){//no water
 				*state = START_STATE_NO_WATER;
 				channel_message[channel_id].sys_state ++;
@@ -263,7 +263,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 		case START_STATE_NO_WATER:
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
-			MCGSTouch_Send(channel_id, DISPLAY_INTERFACE_3, 0, 0);
+			MCGSTouch_Send(channel_id+1, DISPLAY_INTERFACE_3, 0, 0);
 			return N_S_C_R;
 		case START_STATE_NO_WATER + 1:
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_3,&key,&way,&time) == 1){
@@ -279,7 +279,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 		case START_STATE_NO_WATER + 2://send command to check key
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(channel_id, READ_KEY, 0, 1);
+			MCGSTouch_Send(channel_id+1, READ_KEY, 0, 1);
 			(*state) ++;
 			return N_S_C_R;
 		case START_STATE_NO_WATER + 3://get touch screen result
@@ -315,14 +315,14 @@ return N_S_C_R--not switch channel S_C_R--switch channel
 uint32_t sys_stop_handle(uint8_t channel_id)
 {
 	uint8_t key_state, work_time, key, way, time;
-	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id - 1];
-	uint8_t* state = &(channel_message[channel_id - 1].state);
+	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id];
+	uint8_t* state = &(channel_message[channel_id].state);
 
 	switch (*state){
 		case 0://display continue key
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(channel_id,DISPLAY_CONTINUED,0,1);
+			MCGSTouch_Send(channel_id+1,DISPLAY_CONTINUED,0,1);
 			(*state) ++;
 			return N_S_C_R;
 		case 1://judge reply
@@ -339,7 +339,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 		case 2://ask key
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
-			MCGSTouch_Send(channel_id,READ_KEY,0,1);
+			MCGSTouch_Send(channel_id+1,READ_KEY,0,1);
 			return N_S_C_R;
 		case 3://judge reply
 			key_state = MCGSTouch_Receive(READ_KEY,&key,&way,&time);
@@ -367,7 +367,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 			}
 			break;
 		case 4://ask device IO
-			if(device_data[channel_id - 1].bit.continued){
+			if(device_data[channel_id].bit.continued){
 				*state = 0;
 				channel_message[channel_id].sys_state --;
 			}

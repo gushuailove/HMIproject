@@ -9,6 +9,14 @@
 
 
 typedef enum {
+	SWITCH_PUMP = 0,//ref overlay sheet	
+	SWITCH_O3,
+	SWITCH_ATOMIZER,
+	SWITCH_MAX
+}SwitchIO;
+
+
+typedef enum {
 	DEVICE_STATE_POWERON = 0,//ref overlay sheet	
 	DEVICE_STATE_WAITING,
 	DEVICE_STATE_START,
@@ -35,6 +43,8 @@ void device_initial(void);
 void read_work_value(uint8_t chn, uint8_t* mode, uint8_t* time);
 void write_work_value(uint8_t chn, uint8_t mode, uint8_t time);//write touchscreen data
 void device_loop(DeviceStateType device_state, uint8_t channel_id);
+void set_device_switch(SwitchIO io, uint8_t channel_id);
+void Reset_device_switch(SwitchIO io, uint8_t channel_id);
 
 #endif
 
