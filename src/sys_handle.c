@@ -58,6 +58,7 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_1,&key,&way,&time) == 1){
 				channel_message[channel_id].sys_state ++;
 				*state = 0;
+				break;
 			}
 			if(Delay_Ok(ov_timer)){//error overtime
 				*state = 0;
@@ -90,7 +91,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 			(*state) ++;
 			return N_S_C_R;
 		case 1://get touch screen result
-			key_state = MCGSTouch_Receive(DISPLAY_INTERFACE_1,&key,&way,&time);
+			key_state = MCGSTouch_Receive(READ_KEY,&key,&way,&time);
 			if(key_state == 2){//no press
 				(*state) ++;
 			}
@@ -140,7 +141,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 			Open_Delay(ov_timer);
 			MCGSTouch_Send(channel_id+1,EMPTY_KEY,0,1);
 			(*state) ++;
-			break;
+			return N_S_C_R;
 		case 6:
 			if(MCGSTouch_Receive(EMPTY_KEY,&key,&way,&time) == 1){
 				(*state) ++;
@@ -196,6 +197,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
 			MCGSTouch_Send(channel_id+1,UPDATE_TIME,1,channel_message[channel_id].remaining_time);// mode update??
+			(*state) ++;
 			return N_S_C_R;
 		case 3://judge reply
 			if(MCGSTouch_Receive(UPDATE_TIME,&key,&way,&time) == 1){					
@@ -212,6 +214,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
 			MCGSTouch_Send(channel_id+1,READ_KEY,0,1);
+			(*state) ++;
 			return N_S_C_R;
 		case 5://judge reply
 			key_state = MCGSTouch_Receive(READ_KEY,&key,&way,&time);
@@ -260,6 +263,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			else{
 				*state = 4;
 			}
+			break;			
 		case START_STATE_NO_WATER:
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		

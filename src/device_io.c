@@ -9,9 +9,8 @@
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_rcc.h"
 
-/*debug use*/
-static uint8_t test_foot_value = 0;
-static uint8_t test_sensor_value = 0;
+
+
 
 
 DeviceData device_data[CHANNEL_MAX];
@@ -21,6 +20,10 @@ static uint8_t work_time[CHANNEL_MAX] = {30, 30};
 
 uint8_t detect_foot_io(void)
 {
+	/*debug use*/
+	static uint8_t test_foot_value = 0;
+
+	
 	if(test_foot_value){
 		test_foot_value = 0;
 		return 1;
@@ -30,6 +33,7 @@ uint8_t detect_foot_io(void)
 
 uint8_t detect_sensor_io(void)
 {
+	static uint8_t test_sensor_value = 0;		
 	if(test_sensor_value){
 		test_sensor_value = 0;
 		return 1;
@@ -83,8 +87,8 @@ void device_initial(void)
 	GPIO_Init(GPIOC, &GPIO_InitStructure);	
 	
 	GPIO_ResetBits(GPIOA, GPIO_Pin_8);	 // turn off all switch	
-	GPIO_ResetBits(GPIOA, GPIO_Pin_2);
-	GPIO_SetBits(GPIOA, GPIO_Pin_2);
+//	GPIO_ResetBits(GPIOA, GPIO_Pin_2);
+//	GPIO_SetBits(GPIOA, GPIO_Pin_2);
 	GPIO_ResetBits(GPIOB, GPIO_Pin_15);	 
 	GPIO_ResetBits(GPIOC, GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);	 // turn off all switch
 	
@@ -101,11 +105,11 @@ void device_initial(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);	
 	
-	test_foot_value = 0;
-	test_foot_value = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
-	test_foot_value = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7);
-	test_foot_value = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_4);
-	test_foot_value = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10);
+// 	test_foot_value = 0;
+// 	test_foot_value = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
+// 	test_foot_value = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7);
+// 	test_foot_value = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_4);
+// 	test_foot_value = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_10);
 }
 
 
@@ -150,8 +154,8 @@ void device_loop(DeviceStateType device_state, uint8_t channel_id)
 //channel 2    PA8    PC6   PC8        PC10
 typedef struct IODEVICE
 {
-	uint8_t port,
-	uint8_t pon,
+	GPIO_TypeDef* port;
+	uint16_t pin;
 }IO_DEVICE;
 const IO_DEVICE array_io[CHANNEL_MAX][SWITCH_MAX] = {{{GPIOC, GPIO_Pin_9},{GPIOB, GPIO_Pin_15},{GPIOC, GPIO_Pin_7}},
 							{{GPIOA, GPIO_Pin_8},{GPIOC, GPIO_Pin_6},{GPIOC, GPIO_Pin_8}}};

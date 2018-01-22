@@ -4,8 +4,8 @@
 
 #define CHANNEL_MAX  2
 
-#define WORK_MODE_ALL 1//remaining time count uint is 1s
-#define WORK_MODE_HALF 2//remaining time count uint is 1s
+#define WORK_MODE_ALL 0//remaining time count uint is 1s
+#define WORK_MODE_HALF 1//remaining time count uint is 1s
 
 
 typedef enum {

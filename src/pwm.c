@@ -76,11 +76,11 @@ void TIM2_IRQHandler(void)
 	if ( TIM_GetITStatus(TIM2 , TIM_IT_Update) != RESET ) 
 	{		
 		if(count == 1){
-			GPIO_ResetBits(GPIOA, GPIO_Pin_2);
+//			GPIO_ResetBits(GPIOA, GPIO_Pin_2);
 			count = 0;
 		}
 		else{
-			GPIO_SetBits(GPIOA, GPIO_Pin_2);
+//			GPIO_SetBits(GPIOA, GPIO_Pin_2);
 			count = 1;
 		}
 		TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);    
