@@ -47,13 +47,13 @@ volatile TimerDelay* Delay_Initial(uint16_t  timer_court)
 *************************************************************/
 void Open_Delay(volatile TimerDelay*  timer_delay)
 {
-// 	if(timer_delay->Flag1 == 0)
-// 	{			
+ 	if(timer_delay->Flag1 == 0)
+ 	{			
 		timer_delay->court = timer_delay->Court;			
 		timer_delay->Flag1 = 1;
 		timer_delay->Flag2 = 0;
 		timer_delay->Flag3 = 0;
-// 	}
+ 	}
 	return;
 }
 

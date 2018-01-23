@@ -99,6 +99,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 				if(key==KEY_START){
 					*state = 3;
 					write_work_value(channel_id, way, time);//write touchscreen data
+					read_work_value(channel_id, &(channel_message[channel_id].work_mode), &(channel_message[channel_id].remaining_time));				
 				}
 				else{//error
 					*state = 0;
@@ -122,7 +123,10 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 		case 3://set interface 1 mode and time
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
-			MCGSTouch_Send(channel_id+1,SET_MODE_TIME,0,0);
+			MCGSTouch_Send(channel_id+1,
+				SET_MODE_TIME,
+				channel_message[channel_id].work_mode,
+				channel_message[channel_id].remaining_time);// mode update??
 			(*state) ++;
 			return N_S_C_R;
 		case 4://judje reply
@@ -153,7 +157,6 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 				return N_S_C_R;
 			}
 		case 7://complete
-			read_work_value(channel_id, &(channel_message[channel_id].work_mode), &(channel_message[channel_id].remaining_time));
 			channel_message[channel_id].sys_state ++;
 			*state = 0;
 			break;
@@ -196,7 +199,10 @@ uint32_t sys_start_handle(uint8_t channel_id)
 		case 2://update remaining time
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
-			MCGSTouch_Send(channel_id+1,UPDATE_TIME,1,channel_message[channel_id].remaining_time);// mode update??
+			MCGSTouch_Send(channel_id+1,
+				UPDATE_TIME,
+				channel_message[channel_id].work_mode,
+				channel_message[channel_id].remaining_time);// mode update??
 			(*state) ++;
 			return N_S_C_R;
 		case 3://judge reply
@@ -228,7 +234,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 				}
 				else if(key == KEY_CANCEL){
 					*state = 0;
-					channel_message[channel_id].sys_state = DEVICE_STATE_WAITING;
+					channel_message[channel_id].sys_state = DEVICE_STATE_POWERON;
 				}
 				else{//error
 					*state = 0;
@@ -259,6 +265,11 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			Open_Delay(rm_timer);
 			if(Delay_Ok(rm_timer)){
 				*state = 2;
+				channel_message[channel_id].remaining_time --;
+				if(channel_message[channel_id].remaining_time == 0){
+					*state = 0;
+					channel_message[channel_id].sys_state = DEVICE_STATE_POWERON;					
+				}
 			}
 			else{
 				*state = 4;
@@ -344,6 +355,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
 			MCGSTouch_Send(channel_id+1,READ_KEY,0,1);
+			(*state) ++;
 			return N_S_C_R;
 		case 3://judge reply
 			key_state = MCGSTouch_Receive(READ_KEY,&key,&way,&time);
@@ -357,7 +369,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 				}
 				else if(key == KEY_CANCEL){
 					*state = 0;
-					channel_message[channel_id].sys_state = DEVICE_STATE_WAITING;
+					channel_message[channel_id].sys_state = DEVICE_STATE_POWERON;
 				}
 				else{//error
 					*state = 0;
