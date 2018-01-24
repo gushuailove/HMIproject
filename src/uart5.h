@@ -5,7 +5,7 @@
 #include "timer.h"
 
 #define		UART5_RX_BUF		200    //接收数据缓存长度
-#define		UART5_TIMER         10					//串口数据接收延时，在30ms内没有新的数据则认为单次数据接收完成
+#define		UART5_TIMER         5					//串口数据接收延时，在30ms内没有新的数据则认为单次数据接收完成
 
 typedef  unsigned char  UART5_Buf_Type;
 typedef struct

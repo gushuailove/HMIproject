@@ -28,7 +28,7 @@ int main(void)
 	static uint8_t chn = 0;
 	uint8_t i,func_index;
 	device_initial();
-//	Tim2_Config();
+	Tim2_Config();
 	Tim3_Config();
 	MCGSTouch_Initial();//MCGSTouch_Initial初始化;
 	sys_handle_initial();

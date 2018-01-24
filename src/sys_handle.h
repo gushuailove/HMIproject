@@ -1,6 +1,5 @@
 #ifndef SYS_HANDLE_H__
 #define SYS_HANDLE_H__
-#include "timer.h"
 #include "device_io.h"
 #define SYS_OV_TIME 500//system overtimer is 5s
 #define REMAININ1_TIME 600//remaining time count uint is 1min

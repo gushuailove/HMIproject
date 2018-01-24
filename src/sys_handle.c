@@ -1,7 +1,7 @@
 #include "sys_handle.h"
 #include "device_io.h"
 #include "MCGSTouch.h"
-
+#include "timer.h"
 
 uint32_t sys_poweron_handle(uint8_t channel_id);
 uint32_t sys_waiting_handle(uint8_t channel_id);
@@ -42,33 +42,46 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 	uint8_t work_mode, work_time, key, way, time;
 	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id];
 	uint8_t* state = &(channel_message[channel_id].state);
+	static uint8_t ini = 0;
 	
 	if(channel_id>=2){
 		while(1);
 	}
 	switch (*state){
 		case 0://get default value
+			if(ini){
+				(*state) ++;
+				break;				
+			}
+			Open_Delay(ov_timer);
+			if(Delay_Ok(ov_timer))
+				(*state) ++;
+			break;	
+		case 1://get default value
+			ini = 1;
+			speak_switch = 0;
+			close_switch(channel_id);	
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
 			read_work_value(channel_id, &work_mode, &work_time);
 			MCGSTouch_Send(channel_id+1, DISPLAY_INTERFACE_1, work_mode, work_time);
 			(*state) ++;
 			return N_S_C_R;
-		case 1://judge achieve success
+		case 2://judge achieve success
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_1,&key,&way,&time) == 1){
 				channel_message[channel_id].sys_state ++;
-				*state = 0;
+				*state = 1;
 				break;
 			}
 			if(Delay_Ok(ov_timer)){//error overtime
-				*state = 0;
+				*state = 1;
 			}
 			else{//wait touchscreen answer
 				return N_S_C_R;
 			}			
 			break;
 		default:
-			*state = 0;
+			*state = 1;
 			break;
 	}
 	return S_C_R;
@@ -115,6 +128,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 		case 2://judge foot key
 			if(device_data[channel_id].bit.start){
 				*state = 3;
+				read_work_value(channel_id, &(channel_message[channel_id].work_mode), &(channel_message[channel_id].remaining_time));
 			}
 			else{
 				*state = 0;//loop check
@@ -157,7 +171,7 @@ uint32_t sys_waiting_handle(uint8_t channel_id)
 				return N_S_C_R;
 			}
 		case 7://complete
-			channel_message[channel_id].sys_state ++;
+			channel_message[channel_id].sys_state ++;	
 			*state = 0;
 			break;
 		default:
@@ -179,7 +193,9 @@ uint32_t sys_start_handle(uint8_t channel_id)
 	uint8_t* state = &(channel_message[channel_id].state);
 
 	switch (*state){
-		case 0://switch interface to 2
+		case 0://switch interface to 2			
+			speak_switch = 0;
+			open_switch(channel_message[channel_id].work_mode, channel_id);
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
 			MCGSTouch_Send(channel_id+1,DISPLAY_INTERFACE_2,1,1); 
@@ -255,7 +271,7 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			else if(device_data[channel_id].bit.water && 
 				(channel_message[channel_id].work_mode == WORK_MODE_ALL)){//no water
 				*state = START_STATE_NO_WATER;
-				channel_message[channel_id].sys_state ++;
+				close_switch(channel_id);
 			}
 			else{
 				(*state) ++;
@@ -278,7 +294,9 @@ uint32_t sys_start_handle(uint8_t channel_id)
 		case START_STATE_NO_WATER:
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);		
+			speak_switch = 1;
 			MCGSTouch_Send(channel_id+1, DISPLAY_INTERFACE_3, 0, 0);
+			(*state) ++;
 			return N_S_C_R;
 		case START_STATE_NO_WATER + 1:
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_3,&key,&way,&time) == 1){
@@ -298,13 +316,15 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			(*state) ++;
 			return N_S_C_R;
 		case START_STATE_NO_WATER + 3://get touch screen result
-			key_state = MCGSTouch_Receive(DISPLAY_INTERFACE_1,&key,&way,&time);
+			key_state = MCGSTouch_Receive(READ_KEY,&key,&way,&time);
 			if(key_state == 2){//no press
-				(*state) --;
+				(*state) ++;
 			}
 			else if(key_state == 3){//press
+				speak_switch = 0;
 				if(key == KEY_ENTER){
-					*state = 0;//?????????????					
+					*state = 0;
+					device_data[channel_id].bit.water = 0;
 				}
 				else{//error
 					*state = 0;
@@ -315,6 +335,12 @@ uint32_t sys_start_handle(uint8_t channel_id)
 			}
 			else{//wait touchscreen answer
 				return N_S_C_R;
+			}
+			break;
+		case START_STATE_NO_WATER + 4://get footkey
+			if(device_data[channel_id].bit.continued){
+				*state = 0;
+				device_data[channel_id].bit.water = 0;
 			}
 			break;
 		default:
@@ -335,6 +361,7 @@ uint32_t sys_stop_handle(uint8_t channel_id)
 
 	switch (*state){
 		case 0://display continue key
+			close_switch(channel_id);
 			Close_Delay(ov_timer);
 			Open_Delay(ov_timer);
 			MCGSTouch_Send(channel_id+1,DISPLAY_CONTINUED,0,1);
