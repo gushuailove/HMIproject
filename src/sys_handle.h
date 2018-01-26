@@ -2,7 +2,7 @@
 #define SYS_HANDLE_H__
 #include "device_io.h"
 #define SYS_OV_TIME 500//system overtimer is 5s
-#define REMAININ1_TIME 600//remaining time count uint is 1min
+#define REMAININ1_TIME 6000//remaining time count uint is 1min
 
 #define N_S_C_R		0//NOT_SWITCH_CHANNEL_RETURN
 #define S_C_R		1//SWITCH_CHANNEL_RETURN

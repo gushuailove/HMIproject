@@ -109,6 +109,7 @@ void device_initial(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);	
 	
+	
 // 	test_foot_value = 0;
 // 	test_foot_value = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
 // 	test_foot_value = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7);
@@ -235,21 +236,23 @@ uint8_t detect_io(uint8_t type, uint8_t channel_id)
 	static uint8_t water_curr_value[CHANNEL_MAX];
 	static uint8_t water_temp_value[CHANNEL_MAX];
 	static uint8_t water_count[CHANNEL_MAX];
-	uint8_t temp;
+	uint8_t temp,i;
 
 	Open_Delay(flt_timer);
 	if(Delay_Ok(flt_timer)){
 		//footkey filter
-		temp = get_device_switch(FOOT_KEY, channel_id);
-		if(temp != foot_temp_value[channel_id]){
-			foot_temp_value[channel_id] = temp;
-		}
-		else{
-			foot_count[channel_id] ++;
-			if(foot_count[channel_id] >= 10){//change state
-				foot_count[channel_id] = 0;
-				foot_last_value[channel_id] = foot_curr_value[channel_id];
-				foot_curr_value[channel_id] = temp;				
+		for(i = 0; i < CHANNEL_MAX; i++){
+			temp = get_device_switch(FOOT_KEY, i);
+			if(temp != foot_temp_value[i]){
+				foot_temp_value[i] = temp;
+			}
+			else{
+				foot_count[i] ++;
+				if(foot_count[i] >= 10){//change state
+					foot_count[i] = 0;
+					foot_last_value[i] = foot_curr_value[i];
+					foot_curr_value[i] = temp;				
+				}
 			}
 		}
 		//water sensor filter

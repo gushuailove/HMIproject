@@ -42,14 +42,14 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 	uint8_t work_mode, work_time, key, way, time;
 	volatile TimerDelay* ov_timer = sys_ov_timers[channel_id];
 	uint8_t* state = &(channel_message[channel_id].state);
-	static uint8_t ini = 0;
+	static uint8_t ini[CHANNEL_MAX] = {0};
 	
 	if(channel_id>=2){
 		while(1);
 	}
 	switch (*state){
 		case 0://get default value
-			if(ini){
+			if(ini[channel_id]){
 				(*state) ++;
 				break;				
 			}
@@ -58,7 +58,7 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 				(*state) ++;
 			break;	
 		case 1://get default value
-			ini = 1;
+			ini[channel_id] = 1;
 			speak_switch = 0;
 			close_switch(channel_id);	
 			Close_Delay(ov_timer);
@@ -70,7 +70,7 @@ uint32_t sys_poweron_handle(uint8_t channel_id)
 		case 2://judge achieve success
 			if(MCGSTouch_Receive(DISPLAY_INTERFACE_1,&key,&way,&time) == 1){
 				channel_message[channel_id].sys_state ++;
-				*state = 1;
+				*state = 0;
 				break;
 			}
 			if(Delay_Ok(ov_timer)){//error overtime
