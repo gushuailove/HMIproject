@@ -273,12 +273,12 @@ uint8_t detect_io(uint8_t type, uint8_t channel_id)
 			if(water_curr_value[channel_id] == 0)
 				return 1;
 			break;
-		case 1://low to high
-			if((foot_last_value[channel_id] == 0)&&(foot_curr_value[channel_id] == 1))
+		case 1://high to low
+			if((foot_last_value[channel_id] == 1)&&(foot_curr_value[channel_id] == 0))
 				return 1;
 			break;
-		case 2://high to low
-			if((foot_last_value[channel_id] == 1)&&(foot_curr_value[channel_id] == 0))
+		case 2://low to high
+			if((foot_last_value[channel_id] == 0)&&(foot_curr_value[channel_id] == 1))
 				return 1;
 			break;
 	}
